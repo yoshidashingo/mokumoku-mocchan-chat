@@ -1,38 +1,36 @@
-import { Configuration, OpenAIApi } from "openai";
+// pages/api/chat.ts
 
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from 'next';
+// LangChainやその他必要なライブラリをインポートする
+// 例: import { LangChainClient } from 'langchain';
 
-type Data = {
-  message: string;
-};
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  const apiKey = req.body.apiKey || process.env.OPEN_AI_KEY;
-
-  if (!apiKey) {
-    res
-      .status(400)
-      .json({ message: "APIキーが間違っているか、設定されていません。" });
-
-    return;
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
-  const configuration = new Configuration({
-    apiKey: apiKey,
-  });
+  const { messages } = req.body;
 
-  const openai = new OpenAIApi(configuration);
+  const apiKey = process.env.OPENAI_API_KEY;
 
-  const { data } = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: req.body.messages,
-  });
+  if (!apiKey) {
+    return res.status(400).json({ message: 'Invalid API Key' });
+  }
 
-  const [aiRes] = data.choices;
-  const message = aiRes.message?.content || "エラーが発生しました";
+  // LangChainのクライアントを初期化
+  // const langChainClient = new LangChainClient(/* 設定 */);
 
-  res.status(200).json({ message: message });
+  // LangChainを使用してOpenAI APIに問い合わせる
+  try {
+    const response = await langChainClient.query({
+      messages: messages,
+      apiKey: apiKey,
+    });
+
+    // LangChainからのレスポンスをクライアントに返す
+    return res.status(200).json(response);
+  } catch (error) {
+    console.error('LangChain query error:', error);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
 }
