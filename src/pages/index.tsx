@@ -39,10 +39,10 @@ export default function Home() {
     process.nextTick(() =>
       window.localStorage.setItem(
         "chatVRMParams",
-        JSON.stringify({ systemPrompt, koeiroParam, chatLog })
+        JSON.stringify({ systemPrompt, koeiroParam })
       )
     );
-  }, [systemPrompt, koeiroParam, chatLog]);
+  }, [systemPrompt, koeiroParam]);
 
   const handleChangeChatLog = useCallback(
     (targetIndex: number, text: string) => {
@@ -187,7 +187,6 @@ export default function Home() {
       <Menu
         openAiKey={openAiKey}
         systemPrompt={systemPrompt}
-        chatLog={chatLog}
         koeiroParam={koeiroParam}
         assistantMessage={assistantMessage}
         koeiromapKey={koeiromapKey}

@@ -14,7 +14,6 @@ import { Link } from "./link";
 type Props = {
   openAiKey: string;
   systemPrompt: string;
-  chatLog: Message[];
   koeiroParam: KoeiroParam;
   koeiromapKey: string;
   onClickClose: () => void;
@@ -29,17 +28,14 @@ type Props = {
 };
 export const Settings = ({
   openAiKey,
-  chatLog,
   systemPrompt,
   koeiroParam,
   koeiromapKey,
   onClickClose,
   onChangeSystemPrompt,
   onChangeAiKey,
-  onChangeChatLog,
   onChangeKoeiroParam,
   onClickOpenVrmFile,
-  onClickResetChatLog,
   onClickResetSystemPrompt,
   onChangeKoeiromapKey,
 }: Props) => {
@@ -188,39 +184,6 @@ export const Settings = ({
               ></input>
             </div>
           </div>
-          {chatLog.length > 0 && (
-            <div className="my-40">
-              <div className="my-8 grid-cols-2">
-                <div className="my-16 typography-20 font-bold">会話履歴</div>
-                <TextButton onClick={onClickResetChatLog}>
-                  会話履歴リセット
-                </TextButton>
-              </div>
-              <div className="my-8">
-                {chatLog.map((value, index) => {
-                  return (
-                    <div
-                      key={index}
-                      className="my-8 grid grid-flow-col  grid-cols-[min-content_1fr] gap-x-fixed"
-                    >
-                      <div className="w-[64px] py-8">
-                        {value.role === "assistant" ? "Character" : "You"}
-                      </div>
-                      <input
-                        key={index}
-                        className="bg-surface1 hover:bg-surface1-hover rounded-8 w-full px-16 py-8"
-                        type="text"
-                        value={value.content}
-                        onChange={(event) => {
-                          onChangeChatLog(index, event.target.value);
-                        }}
-                      ></input>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
