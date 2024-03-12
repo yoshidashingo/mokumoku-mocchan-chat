@@ -1,7 +1,6 @@
 import { IconButton } from "./iconButton";
 import { Message } from "@/features/messages/messages";
 import { KoeiroParam } from "@/features/constants/koeiroParam";
-import { ChatLog } from "./chatLog";
 import React, { useCallback, useContext, useRef, useState } from "react";
 import { Settings } from "./settings";
 import { ViewerContext } from "@/features/vrmViewer/viewerContext";
@@ -10,7 +9,6 @@ import { AssistantText } from "./assistantText";
 type Props = {
   openAiKey: string;
   systemPrompt: string;
-  chatLog: Message[];
   koeiroParam: KoeiroParam;
   assistantMessage: string;
   koeiromapKey: string;
@@ -25,7 +23,6 @@ type Props = {
 export const Menu = ({
   openAiKey,
   systemPrompt,
-  chatLog,
   koeiroParam,
   assistantMessage,
   koeiromapKey,
@@ -108,29 +105,11 @@ export const Menu = ({
             isProcessing={false}
             onClick={() => setShowSettings(true)}
           ></IconButton>
-          {showChatLog ? (
-            <IconButton
-              iconName="24/CommentOutline"
-              label="会話ログ"
-              isProcessing={false}
-              onClick={() => setShowChatLog(false)}
-            />
-          ) : (
-            <IconButton
-              iconName="24/CommentFill"
-              label="会話ログ"
-              isProcessing={false}
-              disabled={chatLog.length <= 0}
-              onClick={() => setShowChatLog(true)}
-            />
-          )}
         </div>
       </div>
-      {showChatLog && <ChatLog messages={chatLog} />}
       {showSettings && (
         <Settings
           openAiKey={openAiKey}
-          chatLog={chatLog}
           systemPrompt={systemPrompt}
           koeiroParam={koeiroParam}
           koeiromapKey={koeiromapKey}
