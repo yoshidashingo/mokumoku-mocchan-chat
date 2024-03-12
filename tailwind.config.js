@@ -17,14 +17,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#856292",
-        "primary-hover": "#8E76A1",
-        "primary-press": "#988BB0",
-        "primary-disabled": "#6F48694D",
-        secondary: "#FF617F",
-        "secondary-hover": "#FF849B",
-        "secondary-press": "#FF9EB1",
-        "secondary-disabled": "#FF617F4D",
+        primary: "#c4f136",
+        "primary-hover": "#dcf48b",
+        "primary-press": "#c4f136",
+        "primary-disabled": "#dcf48b",
+        secondary: "#25392b",
+        "secondary-hover": "#7c9383",
+        "secondary-press": "#25392b",
+        "secondary-disabled": "#7c9383",
         base: "#3eb988",
         "text-primary": "#514062",
       },
