@@ -25,7 +25,7 @@ module.exports = {
         "secondary-hover": "#FF849B",
         "secondary-press": "#FF9EB1",
         "secondary-disabled": "#FF617F4D",
-        base: "#FBE2CA",
+        base: "#3eb988",
         "text-primary": "#514062",
       },
       fontFamily: {

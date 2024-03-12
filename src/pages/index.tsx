@@ -10,10 +10,7 @@ import { speakCharacter } from "@/features/messages/speakCharacter";
 import { MessageInputContainer } from "@/components/messageInputContainer";
 import { SYSTEM_PROMPT } from "@/features/constants/systemPromptConstants";
 import { KoeiroParam, DEFAULT_PARAM } from "@/features/constants/koeiroParam";
-import { getChatResponseStream } from "@/features/chat/openAiChat";
-import { Introduction } from "@/components/introduction";
 import { Menu } from "@/components/menu";
-import { GitHubLink } from "@/components/githubLink";
 import { Meta } from "@/components/meta";
 
 export default function Home() {
@@ -103,28 +100,33 @@ export default function Home() {
         ...messageLog,
       ];
 
-      const stream = await getChatResponseStream(messages, openAiKey).catch(
-        (e) => {
-          console.error(e);
-          return null;
-        }
-      );
-      if (stream == null) {
-        setChatProcessing(false);
-        return;
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: messages,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
       }
 
-      const reader = stream.getReader();
+      const data = await response.json();
+
+      const aiText = data.text; 
+
       let receivedMessage = "";
       let aiTextLog = "";
       let tag = "";
       const sentences = new Array<string>();
+
       try {
         while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
 
-          receivedMessage += value;
+          receivedMessage += aiText;
 
           // 返答内容のタグ部分の検出
           const tagMatch = receivedMessage.match(/^\[(.*?)\]/);
@@ -165,34 +167,18 @@ export default function Home() {
             });
           }
         }
-      } catch (e) {
-        setChatProcessing(false);
-        console.error(e);
+      } catch (error) {
+        console.error("Fetch error:", error);
       } finally {
-        reader.releaseLock();
+        setChatProcessing(false);
       }
-
-      // アシスタントの返答をログに追加
-      const messageLogAssistant: Message[] = [
-        ...messageLog,
-        { role: "assistant", content: aiTextLog },
-      ];
-
-      setChatLog(messageLogAssistant);
-      setChatProcessing(false);
     },
-    [systemPrompt, chatLog, handleSpeakAi, openAiKey, koeiroParam]
+    [systemPrompt, chatLog, handleSpeakAi, koeiroParam]
   );
 
   return (
     <div className={"font-M_PLUS_2"}>
       <Meta />
-      <Introduction
-        openAiKey={openAiKey}
-        koeiroMapKey={koeiromapKey}
-        onChangeAiKey={setOpenAiKey}
-        onChangeKoeiromapKey={setKoeiromapKey}
-      />
       <VrmViewer />
       <MessageInputContainer
         isChatProcessing={chatProcessing}
@@ -213,7 +199,6 @@ export default function Home() {
         handleClickResetSystemPrompt={() => setSystemPrompt(SYSTEM_PROMPT)}
         onChangeKoeiromapKey={setKoeiromapKey}
       />
-      <GitHubLink />
     </div>
   );
 }
