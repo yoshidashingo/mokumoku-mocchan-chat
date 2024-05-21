@@ -13,16 +13,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const { messages } = req.body;
 
-  const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
+  const apiKey = "xxxxxx";
 
   if (!apiKey) {
     return res.status(400).json({ message: 'Invalid API Key' });
   }
 
-  // LangChainのクライアントを初期化
-  // const langChainClient = new LangChainClient(/* 設定 */);
-
-  // LangChainを使用してOpenAI APIに問い合わせる
   try {
     const chatModel = new ChatOpenAI({
       openAIApiKey: apiKey,
@@ -31,6 +27,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const prompt = ChatPromptTemplate.fromMessages(messages);
     const chain = prompt.pipe(chatModel);
     const response = await chain.invoke({});
+
+    console.log(response);
 
     // LangChainからのレスポンスをクライアントに返す
     return res.status(200).json(response);

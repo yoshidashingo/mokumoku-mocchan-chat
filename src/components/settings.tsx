@@ -12,12 +12,10 @@ import {
 import { Link } from "./link";
 
 type Props = {
-  openAiKey: string;
   systemPrompt: string;
   koeiroParam: KoeiroParam;
   koeiromapKey: string;
   onClickClose: () => void;
-  onChangeAiKey: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onChangeSystemPrompt: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onChangeChatLog: (index: number, text: string) => void;
   onChangeKoeiroParam: (x: number, y: number) => void;
@@ -27,13 +25,11 @@ type Props = {
   onChangeKoeiromapKey: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 export const Settings = ({
-  openAiKey,
   systemPrompt,
   koeiroParam,
   koeiromapKey,
   onClickClose,
   onChangeSystemPrompt,
-  onChangeAiKey,
   onChangeKoeiroParam,
   onClickOpenVrmFile,
   onClickResetSystemPrompt,
@@ -52,14 +48,6 @@ export const Settings = ({
         <div className="text-text1 max-w-3xl mx-auto px-24 py-64 ">
           <div className="my-24 typography-32 font-bold">設定</div>
           <div className="my-24">
-            <div className="my-16 typography-20 font-bold">OpenAI API キー</div>
-            <input
-              className="text-ellipsis px-16 py-8 w-col-span-2 bg-surface1 hover:bg-surface1-hover rounded-8"
-              type="text"
-              placeholder="sk-..."
-              value={openAiKey}
-              onChange={onChangeAiKey}
-            />
             <div>
               APIキーは
               <Link

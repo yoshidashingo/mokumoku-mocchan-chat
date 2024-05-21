@@ -15,9 +15,7 @@ import { Meta } from "@/components/meta";
 
 export default function Home() {
   const { viewer } = useContext(ViewerContext);
-
   const [systemPrompt, setSystemPrompt] = useState(SYSTEM_PROMPT);
-  const [openAiKey, setOpenAiKey] = useState("");
   const [koeiromapKey, setKoeiromapKey] = useState("");
   const [koeiroParam, setKoeiroParam] = useState<KoeiroParam>(DEFAULT_PARAM);
   const [chatProcessing, setChatProcessing] = useState(false);
@@ -74,10 +72,6 @@ export default function Home() {
    */
   const handleSendChat = useCallback(
     async (text: string) => {
-      if (!openAiKey) {
-        setAssistantMessage("APIキーが入力されていません");
-        return;
-      }
 
       const newMessage = text;
 
@@ -85,18 +79,15 @@ export default function Home() {
 
       setChatProcessing(true);
       // ユーザーの発言を追加して表示
-      const messageLog: Message[] = [
+      const messageLog: any[] = [
         ...chatLog,
-        { role: "user", content: newMessage },
+        ["user", newMessage]
       ];
       setChatLog(messageLog);
 
       // Chat GPTへ
-      const messages: Message[] = [
-        {
-          role: "system",
-          content: systemPrompt,
-        },
+      const messages: any[] = [
+        ["system", systemPrompt],
         ...messageLog,
       ];
 
@@ -111,7 +102,8 @@ export default function Home() {
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        console.log(response)
+        // throw new Error('Network response was not ok');
       }
 
       const data = await response.json();
@@ -185,12 +177,10 @@ export default function Home() {
         onChatProcessStart={handleSendChat}
       />
       <Menu
-        openAiKey={openAiKey}
         systemPrompt={systemPrompt}
         koeiroParam={koeiroParam}
         assistantMessage={assistantMessage}
         koeiromapKey={koeiromapKey}
-        onChangeAiKey={setOpenAiKey}
         onChangeSystemPrompt={setSystemPrompt}
         onChangeChatLog={handleChangeChatLog}
         onChangeKoeiromapParam={setKoeiroParam}
